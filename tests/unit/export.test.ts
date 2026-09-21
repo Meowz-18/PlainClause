@@ -35,6 +35,7 @@ const mockTriage: Triage = {
     { role: 'Licensor', name: 'Mr. Sharma' },
     { role: 'Licensee', name: 'Ms. Mehta' },
   ],
+  reasoning: 'Standard residential rental agreement in Maharashtra.',
 };
 
 const mockFindings: ClauseFinding[] = [
