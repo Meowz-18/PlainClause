@@ -1,0 +1,46 @@
+CONSULTING AGREEMENT
+
+This Agreement is made on 1st September, 2026.
+
+BETWEEN
+
+DataSync Solutions Pvt. Ltd., having its registered office at 10, MG Road, Bangalore 560001 ("Company")
+
+AND
+
+Mr. Karthik Raghavan, residing at 5, Jayanagar 4th Block, Bangalore 560041 ("Consultant")
+
+1. SCOPE OF WORK
+
+1.1 The Company engages the Consultant to provide data engineering and analytics consulting services.
+1.2 The specific deliverables shall be described in individual project briefs issued from time to time.
+
+2. FEES AND PAYMENT
+
+2.1 The Company shall pay the Consultant a monthly retainer of Rs. 1,50,000/- for services rendered.
+2.2 Payment shall be made within 30 days of receiving a valid invoice.
+2.3 All fees are exclusive of applicable GST.
+
+3. CONFIDENTIALITY
+
+3.1 The Consultant shall keep all proprietary information of the Company strictly confidential.
+3.2 This obligation shall survive for 2 years after the end of the engagement.
+
+4. INTELLECTUAL PROPERTY
+
+4.1 All work product created by the Consultant in the course of this engagement shall be the property of the Company.
+4.2 The Consultant retains rights to pre-existing tools and methodologies.
+
+5. INDEPENDENT CONTRACTOR
+
+5.1 The Consultant is an independent contractor and not an employee, agent, or partner of the Company.
+5.2 The Consultant is responsible for all taxes applicable to payments received under this Agreement.
+
+6. GOVERNING LAW
+
+This Agreement shall be governed by the laws of India. Courts of Bangalore shall have exclusive jurisdiction.
+
+IN WITNESS WHEREOF the parties have signed.
+
+COMPANY: _________________________
+CONSULTANT: _________________________

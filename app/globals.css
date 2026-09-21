@@ -1,0 +1,425 @@
+@import "tailwindcss";
+@source "../components";
+@source "../app";
+
+/*
+ * PlainClause design system.
+ *
+ * All colours, spacing, and type from DESIGN.md §4.
+ * Light and dark themes via CSS custom properties on :root.
+ * Never colour alone for severity — always glyph + label + colour.
+ */
+
+/* ── Light theme (default) ───────────────────────────────────────────── */
+
+:root {
+  --surface: #FAFAF7;
+  --surface-raised: #FFFFFF;
+  --surface-elevated: #F3F3EE;
+  --surface-sunken: #ECECE6;
+  --canvas-bg: #EBEBE4;
+  --document-sheet: #FFFFFF;
+  
+  --text-primary: #141416;
+  --text-secondary: #4E4E58;
+  --text-tertiary: #7E7E8A;
+  --border: #E0E0DA;
+  --border-subtle: #EBEBE5;
+  --border-strong: #C4C4BA;
+  
+  --accent: #1F4E5F;
+  --accent-hover: #163A47;
+  --accent-subtle: rgba(31, 78, 95, 0.08);
+  --accent-ring: rgba(31, 78, 95, 0.25);
+  --accent-gradient: linear-gradient(135deg, #1F4E5F 0%, #2A6A80 100%);
+
+  --severity-high: #A4262C;
+  --sev-high-bg: rgba(164, 38, 44, 0.07);
+  --sev-high-border: rgba(164, 38, 44, 0.22);
+  --sev-high-fg: #941F25;
+
+  --severity-medium: #A66300;
+  --sev-medium-bg: rgba(166, 99, 0, 0.08);
+  --sev-medium-border: rgba(166, 99, 0, 0.24);
+  --sev-medium-fg: #8C5300;
+
+  --severity-low: #2E6B47;
+  --sev-low-bg: rgba(46, 107, 71, 0.07);
+  --sev-low-border: rgba(46, 107, 71, 0.22);
+  --sev-low-fg: #25593A;
+
+  --severity-absent: #5A5A63;
+  --sev-absent-bg: rgba(90, 90, 99, 0.07);
+  --sev-absent-border: rgba(90, 90, 99, 0.22);
+  --sev-absent-fg: #4F4F57;
+
+  --highlight: #FEF3C7;
+  --highlight-border: #F59E0B;
+  --highlight-text: #141416;
+  --focus-ring: #1F4E5F;
+
+  --shadow-subtle: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 2px 6px 0 rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+  --shadow-elevated: 0 8px 20px -3px rgba(0, 0, 0, 0.08), 0 3px 8px -2px rgba(0, 0, 0, 0.04);
+  --shadow-popover: 0 16px 32px -4px rgba(0, 0, 0, 0.12), 0 4px 12px -4px rgba(0, 0, 0, 0.06);
+  --shadow-sheet: 0 20px 48px -8px rgba(20, 20, 30, 0.12), 0 8px 20px -4px rgba(20, 20, 30, 0.06), 0 0 0 1px rgba(20, 20, 30, 0.06);
+
+  color-scheme: light;
+}
+
+/* ── Dark theme ──────────────────────────────────────────────────────── */
+
+[data-theme="dark"] {
+  --surface: #121215;
+  --surface-raised: #18181D;
+  --surface-elevated: #202026;
+  --surface-sunken: #0A0A0C;
+  --canvas-bg: #09090C;
+  --document-sheet: #15151A;
+
+  --text-primary: #EDEDF0;
+  --text-secondary: #9B9BA6;
+  --text-tertiary: #6E6E78;
+  --border: #2A2A32;
+  --border-subtle: #212128;
+  --border-strong: #3D3D48;
+
+  --accent: #5EB2CB;
+  --accent-hover: #7EC2D7;
+  --accent-subtle: rgba(94, 178, 203, 0.12);
+  --accent-ring: rgba(94, 178, 203, 0.35);
+  --accent-gradient: linear-gradient(135deg, #4A9FB6 0%, #68BED6 100%);
+
+  --severity-high: #FF7570;
+  --sev-high-bg: rgba(255, 117, 112, 0.12);
+  --sev-high-border: rgba(255, 117, 112, 0.3);
+  --sev-high-fg: #FF9B97;
+
+  --severity-medium: #F5B853;
+  --sev-medium-bg: rgba(245, 184, 83, 0.12);
+  --sev-medium-border: rgba(245, 184, 83, 0.3);
+  --sev-medium-fg: #F8CB7E;
+
+  --severity-low: #6EE7B7;
+  --sev-low-bg: rgba(110, 231, 183, 0.12);
+  --sev-low-border: rgba(110, 231, 183, 0.3);
+  --sev-low-fg: #A7F3D0;
+
+  --severity-absent: #A3A3AF;
+  --sev-absent-bg: rgba(163, 163, 175, 0.12);
+  --sev-absent-border: rgba(163, 163, 175, 0.3);
+  --sev-absent-fg: #C4C4CE;
+
+  --highlight: #453512;
+  --highlight-border: #D97706;
+  --highlight-text: #FEF3C7;
+  --focus-ring: #5EB2CB;
+
+  --shadow-subtle: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 2px 8px 0 rgba(0, 0, 0, 0.5), 0 1px 3px -1px rgba(0, 0, 0, 0.4);
+  --shadow-elevated: 0 10px 28px -3px rgba(0, 0, 0, 0.65), 0 4px 10px -2px rgba(0, 0, 0, 0.45);
+  --shadow-popover: 0 18px 36px -4px rgba(0, 0, 0, 0.75), 0 6px 14px -4px rgba(0, 0, 0, 0.55);
+  --shadow-sheet: 0 24px 64px -12px rgba(0, 0, 0, 0.8), 0 8px 24px -4px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08);
+
+  color-scheme: dark;
+}
+
+/* ── Base resets ─────────────────────────────────────────────────────── */
+
+@layer base {
+  *, ::after, ::before, ::backdrop, ::file-selector-button {
+    box-sizing: border-box;
+    border-color: var(--border, currentColor);
+  }
+
+  html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--surface);
+    color: var(--text-primary);
+    font-family: var(--font-inter, 'Inter', system-ui, -apple-system, sans-serif);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+}
+
+/* ── Focus ───────────────────────────────────────────────────────────── */
+
+/* Never remove focus outline without replacement. 3:1 contrast minimum. */
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* ── Skip links ──────────────────────────────────────────────────────── */
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  padding: 8px 16px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 9999;
+  border-radius: 0 0 4px 0;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ── Typography ──────────────────────────────────────────────────────── */
+
+.font-document {
+  font-family: var(--font-source-serif, 'Source Serif 4', 'Georgia', serif);
+}
+
+.font-mono {
+  font-family: ui-monospace, 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Severity badges (glyph + label + colour, never colour alone) ───── */
+
+.severity-high {
+  color: var(--severity-high);
+}
+
+.severity-medium {
+  color: var(--severity-medium);
+}
+
+.severity-low {
+  color: var(--severity-low);
+}
+
+.severity-absent {
+  color: var(--severity-absent);
+}
+
+/* ── Cards & Surfaces ────────────────────────────────────────────────── */
+
+.card {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: var(--shadow-card);
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-elevated);
+}
+
+.card-elevated {
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  box-shadow: var(--shadow-elevated);
+}
+
+.glass-panel {
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── Clause highlighting in reading pane ─────────────────────────────── */
+
+.clause-highlight {
+  background-color: var(--highlight);
+  color: var(--highlight-text);
+  border-radius: 3px;
+  padding: 2px 4px;
+  box-shadow: 0 0 0 1px var(--highlight-border);
+}
+
+.active-clause-glow {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--highlight) 35%, transparent) 0%,
+    color-mix(in srgb, var(--highlight) 15%, transparent) 100%
+  );
+  box-shadow: inset 3px 0 0 0 var(--highlight-border);
+  border-radius: 4px;
+  transition: all 200ms ease;
+}
+
+/* ── Shimmer & Animations ────────────────────────────────────────────── */
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--border) 25%,
+    var(--surface-raised) 37%,
+    var(--border) 63%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 6px;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.finding-enter {
+  animation: fadeInScale 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.02); }
+}
+
+.animate-glow {
+  animation: pulseGlow 2.5s ease-in-out infinite;
+}
+
+/* ── Workspace grid ──────────────────────────────────────────────────── */
+
+.workspace-grid {
+  display: grid;
+  grid-template-columns: 390px 1fr 350px;
+  gap: 0;
+  height: 100%;
+}
+
+@media (max-width: 1279px) {
+  .workspace-grid {
+    grid-template-columns: 390px 1fr;
+  }
+}
+
+@media (max-width: 1023px) {
+  .workspace-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Physical Manuscript Sheet Container ────────────────────────────── */
+
+.document-sheet {
+  background-color: var(--document-sheet);
+  box-shadow: var(--shadow-sheet);
+  border: 1px solid var(--border);
+  position: relative;
+  transition: box-shadow 200ms ease;
+}
+
+/* ── Upload drop zone ────────────────────────────────────────────────── */
+
+.drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: 16px;
+  padding: 44px 32px;
+  text-align: center;
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-subtle);
+  transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  cursor: pointer;
+}
+
+.drop-zone:hover,
+.drop-zone.drag-over {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 4%, var(--surface-raised));
+  box-shadow: 0 0 0 4px var(--accent-ring), var(--shadow-elevated);
+  transform: translateY(-1px);
+}
+
+.drop-zone:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+/* ── Ambient Radial Glows for Hero ───────────────────────────────────── */
+
+.ambient-hero-glow {
+  background: radial-gradient(circle at 50% -20%, color-mix(in srgb, var(--accent) 15%, transparent) 0%, transparent 70%);
+}
+
+/* ── Scrollbar styling ───────────────────────────────────────────────── */
+
+.custom-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 4px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* ── Segmented control (mobile) ──────────────────────────────────────── */
+
+.segmented-control {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--surface-raised);
+}
+
+.segmented-control button {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+  min-height: 36px;
+}
+
+.segmented-control button:not(:last-child) {
+  border-right: 1px solid var(--border);
+}
+
+.segmented-control button[aria-pressed="true"] {
+  background: var(--accent);
+  color: #fff;
+}
+
+.segmented-control button:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -2px;
+}
