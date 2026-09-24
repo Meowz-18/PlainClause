@@ -218,10 +218,15 @@ export async function* analyzeDocument(
       // Matches playbook red flags and keywords against the batch clauses
       const simulatedRaw: unknown[] = [];
 
+      // Pre-build a Map<id, Category> for O(1) lookups inside inferCategory.
+      // Previously each inferCategory call ran O(C) find() scans; with a Map
+      // the entire batch pays O(C) once to build + O(1) per lookup.
+      const categoryById = new Map(playbook.categories.map((c) => [c.id, c]));
+
       const inferCategory = (rfId: string, rfTitle: string, clauseText: string): string => {
+        // O(1) lookups by exact id via pre-built Map
         if (rfId.includes('deposit') || rfId.includes('deduction')) {
-          const cat = playbook.categories.find((c) => c.id === 'deposit');
-          if (cat) return cat.id;
+          if (categoryById.has('deposit')) return 'deposit';
         }
         if (rfId.includes('entry') || rfId.includes('inspection')) {
           const cat = playbook.categories.find((c) => c.id.includes('entry') || c.id.includes('inspection'));
@@ -240,14 +245,13 @@ export async function* analyzeDocument(
           if (cat) return cat.id;
         }
         if (rfId.includes('ip') || rfId.includes('invention')) {
-          const cat = playbook.categories.find((c) => c.id === 'ip');
-          if (cat) return cat.id;
+          if (categoryById.has('ip')) return 'ip';
         }
         if (rfId.includes('salary') || rfId.includes('bonus') || rfId.includes('compensation')) {
-          const cat = playbook.categories.find((c) => c.id === 'compensation');
-          if (cat) return cat.id;
+          if (categoryById.has('compensation')) return 'compensation';
         }
 
+        // Fallback: match rfId substring against category ids, then label words
         for (const cat of playbook.categories) {
           if (rfId.toLowerCase().includes(cat.id.toLowerCase())) return cat.id;
         }

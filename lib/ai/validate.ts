@@ -37,6 +37,16 @@ export function validateFindings(
 
   const clauseMap = new Map(doc.clauses.map((c) => [c.id, c]));
 
+  // Pre-build O(1) lookup Maps for playbook norms and jurisdiction notes.
+  // Previously these used O(N) find() per finding; with Maps the entire
+  // batch of findings pays only O(N) to build + O(1) per lookup.
+  const normMap = new Map(
+    playbook.norms.map((n) => [n.categoryId, n.statement])
+  );
+  const jurisdictionNoteMap = new Map(
+    playbook.jurisdictionNotes.map((n) => [n.categoryId, n.note])
+  );
+
   const validFindings: ClauseFinding[] = [];
 
   for (let idx = 0; idx < items.length; idx++) {
@@ -54,10 +64,8 @@ export function validateFindings(
     }
 
     // 3. Attach reviewed playbook norms and jurisdiction notes (never model-invented)
-    const norm =
-      playbook.norms.find((n) => n.categoryId === item.categoryId)?.statement ?? null;
-    const jurisdictionNote =
-      playbook.jurisdictionNotes.find((n) => n.categoryId === item.categoryId)?.note ?? null;
+    const norm = normMap.get(item.categoryId) ?? null;
+    const jurisdictionNote = jurisdictionNoteMap.get(item.categoryId) ?? null;
 
     // If matched a red flag, use the red flag's verified ask if none provided
     const matchedRf = item.matchedRedFlagId

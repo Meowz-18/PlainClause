@@ -12,7 +12,8 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "bench": "node scripts/bench.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.126.0",
