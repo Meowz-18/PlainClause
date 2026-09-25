@@ -35,14 +35,15 @@ export const maxDuration = 60;
 const RequestBodySchema = z.object({
   question: z.string().min(1).max(2000),
   clauses: z.array(ClauseSchema).min(1),
-  triage: TriageSchema.nullable().optional(),
+  triage: TriageSchema.partial().nullable().optional(),
   history: z
     .array(
       z.object({
         role: z.enum(['user', 'assistant']),
-        content: z.string(),
+        content: z.string().max(5000),
       })
     )
+    .max(20)
     .optional(),
 });
 
@@ -83,14 +84,37 @@ export async function POST(request: NextRequest): Promise<Response> {
             return;
           }
 
-          // 2. Intent Routing
+          // 2. Deterministic Urgent Distress Pre-classifier
+          // Guarantees immediate statutory safety routing in all environments (including CI without API keys)
+          const URGENT_FAST_PATTERN =
+            /\b(locked\s+\w*\s*out|lockout|evict|threat|violence|assault|emergency|unsafe|danger|harm\s+me|police|arrest)\b/i;
+          if (URGENT_FAST_PATTERN.test(question)) {
+            const resources = getEmergencyResources(triage?.jurisdiction);
+            let urgentText = `⚠️ **Immediate Support & Safety Notice**\n\nIf you are facing immediate physical danger, unlawful lock-out, or threats, please connect with statutory support services immediately:\n\n`;
+
+            for (const r of resources) {
+              const phoneStr = r.phone ? ` — **Phone: ${r.phone}**` : '';
+              const hoursStr = r.hours ? ` (${r.hours})` : '';
+              urgentText += `• **${r.name}**${phoneStr}${hoursStr}\n  ${r.description}\n`;
+            }
+
+            urgentText += `\n**What your document says:**\nUnder standard legal procedure, self-help eviction or unlawful lock-out without a formal court/authority order is illegal. Consult an advocate or DLSA pro-bono counsel immediately.`;
+
+            sendEvent('intent', { intent: 'urgent_situation', confidence: 1.0 });
+            sendEvent('token', { text: urgentText });
+            sendEvent('done', { groundedInDocument: false });
+            controller.close();
+            return;
+          }
+
+          // 3. Intent Routing
           const intentRes = await classifyIntent(question, request.signal);
           sendEvent('intent', {
             intent: intentRes.intent,
             confidence: intentRes.confidence,
           });
 
-          // 3. Urgent situation: Emergency & Legal Aid resources first
+          // 4. Urgent situation fallback (if identified by model or deep classifier)
           if (intentRes.intent === 'urgent_situation') {
             const resources = getEmergencyResources(triage?.jurisdiction);
             let urgentText = `⚠️ **Immediate Support & Safety Notice**\n\nIf you are facing immediate physical danger, unlawful lock-out, or threats, please connect with statutory support services immediately:\n\n`;
@@ -109,7 +133,7 @@ export async function POST(request: NextRequest): Promise<Response> {
             return;
           }
 
-          // 4. Off-topic query
+          // 5. Off-topic query
           if (intentRes.intent === 'off_topic') {
             sendEvent('token', {
               text: 'PlainClause is built specifically to analyze and explain legal contracts and agreements. Please ask a question related to this document (for example: termination clauses, notice periods, security deposits, or liability terms).',

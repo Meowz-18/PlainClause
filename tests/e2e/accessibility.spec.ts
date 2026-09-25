@@ -26,6 +26,22 @@ test.describe('Accessibility — axe-core WCAG 2.2 AA', () => {
       (v) => v.impact === 'serious' || v.impact === 'critical'
     );
 
+    if (serious.length > 0) {
+      console.error(
+        'Axe violations on /:',
+        JSON.stringify(
+          serious.map((v) => ({
+            id: v.id,
+            impact: v.impact,
+            description: v.description,
+            nodes: v.nodes.map((n) => ({ html: n.html, target: n.target })),
+          })),
+          null,
+          2
+        )
+      );
+    }
+
     expect(serious).toEqual([]);
   });
 
@@ -40,6 +56,22 @@ test.describe('Accessibility — axe-core WCAG 2.2 AA', () => {
     const serious = results.violations.filter(
       (v) => v.impact === 'serious' || v.impact === 'critical'
     );
+
+    if (serious.length > 0) {
+      console.error(
+        'Axe violations on /about:',
+        JSON.stringify(
+          serious.map((v) => ({
+            id: v.id,
+            impact: v.impact,
+            description: v.description,
+            nodes: v.nodes.map((n) => ({ html: n.html, target: n.target })),
+          })),
+          null,
+          2
+        )
+      );
+    }
 
     expect(serious).toEqual([]);
   });
@@ -56,6 +88,22 @@ test.describe('Accessibility — axe-core WCAG 2.2 AA', () => {
       (v) => v.impact === 'serious' || v.impact === 'critical'
     );
 
+    if (serious.length > 0) {
+      console.error(
+        'Axe violations on /analyze (empty):',
+        JSON.stringify(
+          serious.map((v) => ({
+            id: v.id,
+            impact: v.impact,
+            description: v.description,
+            nodes: v.nodes.map((n) => ({ html: n.html, target: n.target })),
+          })),
+          null,
+          2
+        )
+      );
+    }
+
     expect(serious).toEqual([]);
   });
 
@@ -66,24 +114,40 @@ test.describe('Accessibility — axe-core WCAG 2.2 AA', () => {
 
     // Click the first sample button to load a contract
     const sampleButton = page.locator('button:has-text("Rental Agreement")').first();
-    if (await sampleButton.isVisible()) {
-      await sampleButton.click();
-      // Wait for navigation to /analyze
-      await page.waitForURL('**/analyze', { timeout: 15000 });
-      await page.waitForLoadState('networkidle');
+    await expect(sampleButton).toBeVisible();
+    await sampleButton.click();
 
-      // Wait for the workspace to render with findings
-      await page.waitForTimeout(3000);
+    // Wait for navigation to /analyze
+    await page.waitForURL('**/analyze', { timeout: 15000 });
+    await page.waitForLoadState('networkidle');
 
-      const results = await new AxeBuilder({ page })
-        .withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])
-        .analyze();
+    // Wait for the workspace to render with findings
+    await page.waitForTimeout(3000);
 
-      const serious = results.violations.filter(
-        (v) => v.impact === 'serious' || v.impact === 'critical'
+    const results = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])
+      .analyze();
+
+    const serious = results.violations.filter(
+      (v) => v.impact === 'serious' || v.impact === 'critical'
+    );
+
+    if (serious.length > 0) {
+      console.error(
+        'Axe violations on /analyze (with document):',
+        JSON.stringify(
+          serious.map((v) => ({
+            id: v.id,
+            impact: v.impact,
+            description: v.description,
+            nodes: v.nodes.map((n) => ({ html: n.html, target: n.target })),
+          })),
+          null,
+          2
+        )
       );
-
-      expect(serious).toEqual([]);
     }
+
+    expect(serious).toEqual([]);
   });
 });

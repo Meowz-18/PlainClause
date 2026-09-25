@@ -8,15 +8,10 @@
 export function SkipLinks() {
   return (
     <nav aria-label="Skip links">
-      <a href="#findings" className="skip-link">
-        Skip to findings
-      </a>
-      <a href="#document" className="skip-link">
-        Skip to document
-      </a>
-      <a href="#ask" className="skip-link">
-        Skip to ask
+      <a href="#main-content" className="skip-link">
+        Skip to main content
       </a>
     </nav>
   );
 }
+

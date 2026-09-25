@@ -24,7 +24,7 @@ interface SampleMeta {
 const SAMPLES: SampleMeta[] = [
   {
     id: 'rent-agreement-mumbai',
-    title: 'Mumbai Rent Agreement',
+    title: 'Mumbai Rental Agreement',
     category: 'Residential Tenancy',
     tag: '12 clauses · Lock-in & Deposit',
     icon: '🏢',
@@ -59,12 +59,12 @@ export function SampleButtons({ onSelectSample, disabled = false }: SampleButton
   };
 
   return (
-    <div className="flex flex-col items-center gap-3 w-full max-w-2xl">
+    <section aria-labelledby="sample-documents-heading" className="flex flex-col items-center gap-3 w-full max-w-2xl">
       <div className="flex items-center gap-3">
         <span className="h-px w-10 bg-[var(--border)]" aria-hidden="true" />
-        <span className="text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)] font-mono">
-          Or inspect a real sample contract
-        </span>
+        <h2 id="sample-documents-heading" className="text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)] font-mono">
+          Try a sample
+        </h2>
         <span className="h-px w-10 bg-[var(--border)]" aria-hidden="true" />
       </div>
 
@@ -81,7 +81,10 @@ export function SampleButtons({ onSelectSample, disabled = false }: SampleButton
               aria-label={`Load sample: ${sample.title}`}
             >
               <div className="flex items-center justify-between w-full mb-2.5">
-                <span className="text-xl p-2 rounded-xl bg-[var(--surface-elevated)] border border-[var(--border-subtle)] group-hover:scale-110 group-hover:shadow-2xs transition-all">
+                <span
+                  className="text-xl p-2 rounded-xl bg-[var(--surface-elevated)] border border-[var(--border-subtle)] group-hover:scale-110 group-hover:shadow-2xs transition-all"
+                  aria-hidden="true"
+                >
                   {sample.icon}
                 </span>
                 {isLoading ? (
@@ -90,8 +93,8 @@ export function SampleButtons({ onSelectSample, disabled = false }: SampleButton
                     aria-hidden="true"
                   />
                 ) : (
-                  <span className="text-[11px] font-mono text-[var(--accent)] font-bold opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all">
-                    Evaluate →
+                  <span className="text-[11px] font-mono text-[var(--accent)] font-bold group-hover:translate-x-0.5 transition-all">
+                    Evaluate <span aria-hidden="true">→</span>
                   </span>
                 )}
               </div>
@@ -111,6 +114,6 @@ export function SampleButtons({ onSelectSample, disabled = false }: SampleButton
           );
         })}
       </div>
-    </div>
+    </section>
   );
 }

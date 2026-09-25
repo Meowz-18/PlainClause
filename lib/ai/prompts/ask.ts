@@ -11,7 +11,7 @@ import { sanitizeUntrustedXml } from '@/lib/safety/injection';
 export interface AskPromptOptions {
   question: string;
   clauses: Clause[];
-  triage: Triage | null;
+  triage: Partial<Triage> | null;
   history?: { role: 'user' | 'assistant'; content: string }[];
 }
 

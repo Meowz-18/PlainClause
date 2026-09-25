@@ -92,13 +92,6 @@ export function UploadZone({
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      fileInputRef.current?.click();
-    }
-  };
-
   if (isPasteMode) {
     return (
       <div className="w-full max-w-xl card">
@@ -138,16 +131,12 @@ export function UploadZone({
   return (
     <div className="w-full max-w-xl flex flex-col gap-3">
       <div
-        role="button"
-        tabIndex={isLoading ? -1 : 0}
+        data-testid="upload-zone"
         onClick={() => fileInputRef.current?.click()}
-        onKeyDown={handleKeyDown}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        aria-label="Upload a PDF, DOCX, or TXT document"
-        aria-disabled={isLoading}
-        className={`drop-zone group flex flex-col items-center justify-center gap-5 p-8 sm:p-12 rounded-3xl border-2 border-dashed border-[var(--border-strong)] bg-[var(--surface-raised)] shadow-card hover:shadow-elevated hover:border-[var(--accent)] transition-all duration-200 cursor-pointer ${
+        className={`drop-zone upload-zone group flex flex-col items-center justify-center gap-5 p-8 sm:p-12 rounded-3xl border-2 border-dashed border-[var(--border-strong)] bg-[var(--surface-raised)] shadow-card hover:shadow-elevated hover:border-[var(--accent)] transition-all duration-200 cursor-pointer ${
           isDragOver ? 'drag-over scale-[1.01] border-[var(--accent)] ring-4 ring-[var(--accent-ring)]' : ''
         } ${isLoading ? 'opacity-60 cursor-wait' : ''}`}
       >
@@ -157,6 +146,7 @@ export function UploadZone({
           accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
           onChange={handleFileInputChange}
           disabled={isLoading}
+          aria-label="Upload document file"
           className="sr-only"
           tabIndex={-1}
         />
@@ -165,7 +155,7 @@ export function UploadZone({
           {isLoading ? (
             <span className="inline-block h-7 w-7 animate-spin rounded-full border-2 border-solid border-[var(--accent)] border-r-transparent" />
           ) : (
-            <span>📄</span>
+            <span aria-hidden="true">📄</span>
           )}
         </div>
 
@@ -183,7 +173,7 @@ export function UploadZone({
               }}
               className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--surface-elevated)] border border-[var(--border)] text-xs font-semibold text-[var(--accent)] hover:bg-[var(--accent-subtle)] hover:border-[var(--accent)] focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)] transition-all cursor-pointer shadow-2xs"
             >
-              <span>📁</span>
+              <span aria-hidden="true">📁</span>
               <span>browse from device</span>
             </button>
             <span>·</span>
@@ -195,7 +185,7 @@ export function UploadZone({
               }}
               className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--surface-elevated)] border border-[var(--border)] text-xs font-semibold text-[var(--text-primary)] hover:bg-[var(--surface)] hover:border-[var(--accent)] focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)] transition-all cursor-pointer shadow-2xs"
             >
-              <span>📋</span>
+              <span aria-hidden="true">📋</span>
               <span>paste text</span>
             </button>
           </div>

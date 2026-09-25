@@ -15,7 +15,7 @@ export default function AboutPage() {
     <div className="flex min-h-screen flex-col bg-[var(--surface)] text-[var(--text-primary)]">
       <Header showDocInfo={false} />
 
-      <main id="main-content" className="flex flex-1 flex-col items-center px-4 py-12 sm:px-6 sm:py-16">
+      <main id="main-content" tabIndex={-1} className="flex flex-1 flex-col items-center px-4 py-12 sm:px-6 sm:py-16 focus:outline-none">
         <article className="w-full max-w-2xl space-y-8">
           {/* Page Heading */}
           <div className="space-y-3 border-b border-[var(--border)] pb-6">
@@ -33,7 +33,7 @@ export default function AboutPage() {
           {/* Section 1: What PlainClause Is */}
           <section aria-labelledby="what-is-heading" className="space-y-3 card">
             <h2 id="what-is-heading" className="text-base font-bold text-[var(--text-primary)] flex items-center gap-2">
-              <span>🧭</span>
+              <span aria-hidden="true">🧭</span>
               <span>Findings-First Architecture</span>
             </h2>
             <p className="text-xs leading-relaxed text-[var(--text-secondary)]">
@@ -42,20 +42,20 @@ export default function AboutPage() {
             </p>
             <ul className="space-y-2.5 text-xs text-[var(--text-secondary)] leading-relaxed pt-1">
               <li className="flex items-start gap-2">
-                <span className="text-[var(--accent)] font-bold">▪</span>
+                <span className="text-[var(--accent)] font-bold" aria-hidden="true">▪</span>
                 <span>
                   <strong className="text-[var(--text-primary)]">Source document is always visible:</strong> Findings are claims about a document;
                   a claim you cannot immediately verify against original text is untrustworthy. The reading pane is the evidence.
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-[var(--accent)] font-bold">▪</span>
+                <span className="text-[var(--accent)] font-bold" aria-hidden="true">▪</span>
                 <span>
                   <strong className="text-[var(--text-primary)]">Ranked analytical hierarchy:</strong> High-risk clauses appear above the fold, while standard terms are grouped so you don&apos;t drown in noise.
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-[var(--accent)] font-bold">▪</span>
+                <span className="text-[var(--accent)] font-bold" aria-hidden="true">▪</span>
                 <span>
                   <strong className="text-[var(--text-primary)]">Omission detection:</strong> What is missing is often what hurts you most. We verify whether standard protections (like landlord repair duties or notice periods) were omitted.
                 </span>
@@ -67,7 +67,7 @@ export default function AboutPage() {
           <section aria-labelledby="what-is-not-heading" className="space-y-3">
             <div className="rounded-xl border border-[var(--severity-medium)] bg-[var(--sev-medium-bg)] p-4 text-xs leading-relaxed text-[var(--text-primary)] shadow-xs space-y-1.5">
               <p className="font-bold flex items-center gap-1.5 text-[var(--sev-medium-fg)] text-sm">
-                <span>⚖️</span>
+                <span aria-hidden="true">⚖️</span>
                 <span>Information, Not Legal Advice</span>
               </p>
               <p className="text-[var(--text-secondary)]">
@@ -79,7 +79,7 @@ export default function AboutPage() {
           {/* Section 3: Privacy & Zero-Retention Architecture */}
           <section aria-labelledby="privacy-heading" className="space-y-3 card">
             <h2 id="privacy-heading" className="text-base font-bold text-[var(--text-primary)] flex items-center gap-2">
-              <span>🔒</span>
+              <span aria-hidden="true">🔒</span>
               <span>Privacy by Architecture</span>
             </h2>
             <p className="text-xs leading-relaxed text-[var(--text-secondary)]">
@@ -87,19 +87,19 @@ export default function AboutPage() {
             </p>
             <ul className="space-y-2.5 text-xs text-[var(--text-secondary)] leading-relaxed pt-1">
               <li className="flex items-start gap-2">
-                <span className="text-[var(--accent)] font-bold">▪</span>
+                <span className="text-[var(--accent)] font-bold" aria-hidden="true">▪</span>
                 <span>
                   <strong className="text-[var(--text-primary)]">Zero Storage:</strong> Everything is held strictly in ephemeral RAM and browser state. The moment you close the tab, all text is gone forever.
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-[var(--accent)] font-bold">▪</span>
+                <span className="text-[var(--accent)] font-bold" aria-hidden="true">▪</span>
                 <span>
                   <strong className="text-[var(--text-primary)]">Pre-Model PII Redaction:</strong> Aadhaar numbers, PAN cards, phone numbers, and emails are replaced with synthetic tokens before passing to any reasoning pipeline.
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-[var(--accent)] font-bold">▪</span>
+                <span className="text-[var(--accent)] font-bold" aria-hidden="true">▪</span>
                 <span>
                   <strong className="text-[var(--text-primary)]">No Accounts or Telemetry:</strong> No logins, no cookies, no tracking pixels, and no data harvesting.
                 </span>
@@ -113,10 +113,10 @@ export default function AboutPage() {
               href="/"
               className="inline-flex items-center gap-2 text-xs font-semibold text-[var(--accent)] hover:underline focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)] rounded-md py-1"
             >
-              <span>←</span>
+              <span aria-hidden="true">←</span>
               <span>Return to document upload</span>
             </Link>
-            <span className="font-mono text-[11px] text-[var(--text-tertiary)] bg-[var(--surface-elevated)] px-2.5 py-1 rounded-md border border-[var(--border-subtle)]">
+            <span className="font-mono text-xs text-[var(--text-secondary)] bg-[var(--surface-elevated)] px-2.5 py-1 rounded-md border border-[var(--border-subtle)]">
               PlainClause v0.1.0 · Hackathon Edition
             </span>
           </div>

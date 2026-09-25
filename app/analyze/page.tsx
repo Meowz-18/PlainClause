@@ -203,7 +203,7 @@ export default function AnalyzePage() {
     return (
       <div className="flex min-h-screen flex-col bg-[var(--surface)] text-[var(--text-primary)]">
         <Header showDocInfo={false} />
-        <main className="flex flex-1 flex-col items-center justify-center p-6 text-center">
+        <main id="main-content" tabIndex={-1} className="flex flex-1 flex-col items-center justify-center p-6 text-center focus:outline-none">
           <div className="card max-w-md p-8 space-y-4">
             <h1 className="text-lg font-bold">No Document Loaded</h1>
             <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
@@ -316,7 +316,7 @@ export default function AnalyzePage() {
       </div>
 
       {/* Main Workspace 3-Column Grid */}
-      <main className="flex-1 min-h-0 overflow-hidden">
+      <main id="main-content" tabIndex={-1} className="flex-1 min-h-0 overflow-hidden focus:outline-none">
         <div className="workspace-grid h-full">
           {/* Column 1: Findings Rail (Left) */}
           <div

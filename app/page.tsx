@@ -150,7 +150,7 @@ export default function LandingPage() {
 
       <Header showDocInfo={false} />
 
-      <main id="main-content" className="relative z-10 flex flex-1 flex-col items-center justify-center px-4 py-12 sm:px-6 sm:py-16">
+      <main id="main-content" tabIndex={-1} className="relative z-10 flex flex-1 flex-col items-center justify-center px-4 py-12 sm:px-6 sm:py-16 focus:outline-none">
         <div className="flex w-full max-w-3xl flex-col items-center text-center">
           {/* Badge Pill */}
           <div className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface-raised)] px-3.5 py-1 text-xs font-medium text-[var(--accent)] shadow-xs mb-6">
@@ -191,45 +191,59 @@ export default function LandingPage() {
           </div>
 
           {/* 3-Column Trust & Privacy Guarantees */}
-          <div className="mt-14 pt-10 border-t border-[var(--border)] grid grid-cols-1 sm:grid-cols-3 gap-4.5 w-full max-w-3xl text-left">
-            <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] p-5 shadow-xs hover:shadow-card hover:-translate-y-0.5 transition-all duration-200">
-              <div className="flex items-center gap-2.5 mb-2">
-                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 border border-amber-500/20 text-sm shadow-2xs">
-                  🔒
-                </span>
-                <h3 className="font-bold text-xs text-[var(--text-primary)] tracking-tight">Zero Retention</h3>
+          <section aria-labelledby="trust-heading" className="mt-14 pt-10 border-t border-[var(--border)] w-full max-w-3xl text-left">
+            <h2 id="trust-heading" className="sr-only">
+              Security and Privacy Guarantees
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4.5 w-full">
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] p-5 shadow-xs hover:shadow-card hover:-translate-y-0.5 transition-all duration-200">
+                <div className="flex items-center gap-2.5 mb-2">
+                  <span
+                    className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 border border-amber-500/20 text-sm shadow-2xs"
+                    aria-hidden="true"
+                  >
+                    🔒
+                  </span>
+                  <p className="font-bold text-xs text-[var(--text-primary)] tracking-tight">Zero Retention</p>
+                </div>
+                <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+                  Processed strictly in volatile browser memory. Discarded permanently the moment you close this tab.
+                </p>
               </div>
-              <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                Processed strictly in volatile browser memory. Discarded permanently the moment you close this tab.
-              </p>
-            </div>
 
-            <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] p-5 shadow-xs hover:shadow-card hover:-translate-y-0.5 transition-all duration-200">
-              <div className="flex items-center gap-2.5 mb-2">
-                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--sev-low-bg)] text-[var(--sev-low-fg)] border border-[var(--sev-low-border)] text-sm shadow-2xs">
-                  🛡️
-                </span>
-                <h3 className="font-bold text-xs text-[var(--text-primary)] tracking-tight">Auto PII Redaction</h3>
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] p-5 shadow-xs hover:shadow-card hover:-translate-y-0.5 transition-all duration-200">
+                <div className="flex items-center gap-2.5 mb-2">
+                  <span
+                    className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--sev-low-bg)] text-[var(--sev-low-fg)] border border-[var(--sev-low-border)] text-sm shadow-2xs"
+                    aria-hidden="true"
+                  >
+                    🛡️
+                  </span>
+                  <p className="font-bold text-xs text-[var(--text-primary)] tracking-tight">Auto PII Redaction</p>
+                </div>
+                <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+                  PAN, Aadhaar, phone numbers, and emails are masked with synthetic tokens before model analysis.
+                </p>
               </div>
-              <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                PAN, Aadhaar, phone numbers, and emails are masked with synthetic tokens before model analysis.
-              </p>
-            </div>
 
-            <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] p-5 shadow-xs hover:shadow-card hover:-translate-y-0.5 transition-all duration-200">
-              <div className="flex items-center gap-2.5 mb-2">
-                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--accent-subtle)] text-[var(--accent)] border border-[var(--accent-ring)] text-sm shadow-2xs">
-                  ⚖️
-                </span>
-                <h3 className="font-bold text-xs text-[var(--text-primary)] tracking-tight">Clause-Grounded</h3>
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] p-5 shadow-xs hover:shadow-card hover:-translate-y-0.5 transition-all duration-200">
+                <div className="flex items-center gap-2.5 mb-2">
+                  <span
+                    className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--accent-subtle)] text-[var(--accent)] border border-[var(--accent-ring)] text-sm shadow-2xs"
+                    aria-hidden="true"
+                  >
+                    ⚖️
+                  </span>
+                  <p className="font-bold text-xs text-[var(--text-primary)] tracking-tight">Clause-Grounded</p>
+                </div>
+                <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+                  Every risk is anchored to clause numbers with market norm comparisons and suggested negotiation asks.
+                </p>
               </div>
-              <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                Every risk is anchored to clause numbers with market norm comparisons and suggested negotiation asks.
-              </p>
             </div>
-          </div>
+          </section>
 
-          <p className="mt-6 text-[11px] text-[var(--text-tertiary)] max-w-lg">
+          <p className="mt-6 text-xs text-[var(--text-secondary)] max-w-lg">
             PlainClause provides document comprehension and information. It is not legal advice and not a substitute for an advocate.
           </p>
         </div>
