@@ -23,6 +23,11 @@ import {
 } from '@/lib/ai/client';
 import { MODEL_SONNET, GROQ_MODEL_POWER } from '@/lib/ai/models';
 import { buildAskPrompt } from '@/lib/ai/prompts/ask';
+import {
+  retrieveRelevantClauses,
+  isBroadQuery,
+  scoreClausesForQuery,
+} from '@/lib/ai/retrieval';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -117,12 +122,35 @@ export async function POST(request: NextRequest): Promise<Response> {
           // 5. Answer Generation (Document Question, Advice Seeking, or General Legal Info)
           const emittedClauseIds = new Set<string>();
 
+          // Extract clause IDs cited in previous conversation turns so retrieval
+          // preserves them (citation verifiability invariant — see EFFICIENCY.md §3).
+          const previouslyCitedIds = new Set<string>();
+          if (history) {
+            for (const h of history) {
+              const citationMatches = h.content.matchAll(/#?(c-\d+)/gi);
+              for (const m of citationMatches) {
+                previouslyCitedIds.add(m[1].toLowerCase());
+              }
+            }
+          }
+
+          // BM25-lite retrieval: send only the most relevant clauses to the model.
+          // For small documents (≤15 clauses) or broad queries, all clauses are sent.
+          // For large documents with targeted questions, this reduces input tokens
+          // by 50–85% (see EFFICIENCY.md §6, Rank 4).
+          const retrievedClauses = retrieveRelevantClauses(
+            question,
+            clauses,
+            previouslyCitedIds
+          );
+
+
           if (isGroqConfigured()) {
             // Live Ultra-Fast Inference via Groq (Llama 3.3 70B)
             const groq = getGroqClient();
             const prompt = buildAskPrompt({
               question,
-              clauses,
+              clauses: retrievedClauses,
               triage: triage ?? null,
               history,
             });
@@ -176,7 +204,7 @@ export async function POST(request: NextRequest): Promise<Response> {
             const client = getAnthropicClient();
             const prompt = buildAskPrompt({
               question,
-              clauses,
+              clauses: retrievedClauses,
               triage: triage ?? null,
               history,
             });
@@ -223,84 +251,14 @@ export async function POST(request: NextRequest): Promise<Response> {
             }
           } else {
             // 6. Deterministic Offline Fallback Grounded Answer (when neither key is configured)
-            const qLower = question.toLowerCase();
+            // Re-uses the shared BM25-lite retrieval module for clause ranking (DRY).
 
             // Check if user is asking for general document overview/summary
-            const isDocumentOverviewQuery =
-              qLower.includes('what is this document') ||
-              qLower.includes('what is the document') ||
-              qLower.includes('about this document') ||
-              qLower.includes('summarize') ||
-              qLower.includes('summary') ||
-              qLower.includes('overview') ||
-              qLower.includes('what kind of contract') ||
-              qLower.includes('what type of agreement');
+            const isDocumentOverviewQuery = isBroadQuery(question);
 
-            // Tokenize user query words (filtering common stop words)
-            const stopWords = new Set([
-              'the', 'is', 'at', 'which', 'on', 'a', 'an', 'in', 'and', 'or', 'of', 'for', 'to',
-              'this', 'that', 'it', 'what', 'does', 'say', 'about', 'how', 'can', 'i', 'my', 'are',
-              'there', 'any', 'tell', 'me', 'with', 'from', 'by', 'as', 'per', 'please', 'explain'
-            ]);
-            const queryWords = qLower
-              .replace(/[^a-z0-9\s]/g, ' ')
-              .split(/\s+/)
-              .filter((w) => w.length > 2 && !stopWords.has(w));
-
-            // Score each clause based on keyword and synonym match
-            const scoredClauses = clauses.map((c) => {
-              const cLower = (c.heading ? `${c.heading} ` : '') + c.text.toLowerCase();
-              let score = 0;
-
-              // Direct query word hits
-              for (const word of queryWords) {
-                if (cLower.includes(word)) {
-                  score += 2;
-                }
-              }
-
-              // Specific legal/contractual topic keywords
-              if ((qLower.includes('early') || qLower.includes('leave') || qLower.includes('terminate')) &&
-                  (cLower.includes('terminat') || cLower.includes('lock-in') || cLower.includes('notice') || cLower.includes('severance'))) {
-                score += 5;
-              }
-              if ((qLower.includes('deposit') || qLower.includes('refund')) &&
-                  (cLower.includes('deposit') || cLower.includes('refund') || cLower.includes('deduction'))) {
-                score += 5;
-              }
-              if ((qLower.includes('enter') || qLower.includes('inspect') || qLower.includes('visit')) &&
-                  (cLower.includes('enter') || cLower.includes('inspect') || cLower.includes('access'))) {
-                score += 5;
-              }
-              if ((qLower.includes('repair') || qLower.includes('maintenance')) &&
-                  (cLower.includes('maintain') || cLower.includes('repair') || cLower.includes('wear and tear'))) {
-                score += 5;
-              }
-              if ((qLower.includes('compete') || qLower.includes('solicit') || qLower.includes('restrict')) &&
-                  (cLower.includes('compete') || cLower.includes('solicit') || cLower.includes('restrictive'))) {
-                score += 5;
-              }
-              if ((qLower.includes('pay') || qLower.includes('rent') || qLower.includes('salary') || qLower.includes('bonus') || qLower.includes('insurance') || qLower.includes('benefit') || qLower.includes('compensation') || qLower.includes('fee')) &&
-                  (cLower.includes('salary') || cLower.includes('bonus') || cLower.includes('insurance') || cLower.includes('benefit') || cLower.includes('rent') || cLower.includes('compensation') || cLower.includes('fee') || cLower.includes('per annum'))) {
-                score += 5;
-              }
-              if ((qLower.includes('probation') || qLower.includes('confirm')) &&
-                  (cLower.includes('probation') || cLower.includes('confirm') || cLower.includes('evaluation'))) {
-                score += 5;
-              }
-              if ((qLower.includes('court') || qLower.includes('jurisdiction') || qLower.includes('dispute') || qLower.includes('arbitrat')) &&
-                  (cLower.includes('jurisdiction') || cLower.includes('court') || cLower.includes('dispute') || cLower.includes('arbitration') || cLower.includes('governing law'))) {
-                score += 5;
-              }
-
-              return { clause: c, score };
-            });
-
-            // Filter relevant clauses with positive score
-            const relevantClauses = scoredClauses
-              .filter((sc) => sc.score > 0)
-              .sort((a, b) => b.score - a.score)
-              .map((sc) => sc.clause);
+            // Score and rank clauses using the shared retrieval module
+            const scored = scoreClausesForQuery(question, clauses);
+            const relevantClauses = scored.map((sc) => sc.clause);
 
             let reply = '';
             if (intentRes.intent === 'advice_seeking') {
