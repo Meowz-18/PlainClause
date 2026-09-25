@@ -9,7 +9,7 @@
  * - Renders emergency support resources when urgent distress is detected
  * - Contextual suggested questions based on triage document type
  */
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import type { Clause, Triage, Citation, Intent } from '@/lib/types';
 import { useDocumentStore } from '@/store/document-store';
 import { getEmergencyResources } from '@/lib/safety/resources';
@@ -87,17 +87,6 @@ export function AskPanel({
     }
   }, [messages, currentStreamingText]);
 
-  // Handle incoming query from external actions (e.g., "Ask AI" button on findings)
-  useEffect(() => {
-    if (pendingQuery && pendingQuery.trim()) {
-      const q = pendingQuery.trim();
-      onClearPendingQuery?.();
-      submitQuery(q);
-      // Focus input field
-      inputRef.current?.focus();
-    }
-  }, [pendingQuery]);
-
   // Suggested questions based on document type
   const suggestions =
     triage?.documentType === 'rental_residential'
@@ -118,7 +107,7 @@ export function AskPanel({
     }
   };
 
-  const submitQuery = async (queryText: string) => {
+  const submitQuery = useCallback(async (queryText: string) => {
     const trimmed = queryText.trim();
     if (!trimmed || isStreaming) return;
 
@@ -249,7 +238,27 @@ export function AskPanel({
       setCurrentCitations([]);
       setCurrentIntent(undefined);
     }
-  };
+  }, [clauses, triage, isStreaming, messages]);
+
+  // Handle incoming query from external actions (e.g., "Ask AI" button on findings).
+  // We defer the submitQuery call via queueMicrotask to avoid calling setState
+  // synchronously inside an effect body (react-hooks/set-state-in-effect).
+  const pendingQueryRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (pendingQuery && pendingQuery.trim()) {
+      pendingQueryRef.current = pendingQuery.trim();
+      onClearPendingQuery?.();
+      inputRef.current?.focus();
+    }
+  }, [pendingQuery, onClearPendingQuery]);
+
+  useEffect(() => {
+    const q = pendingQueryRef.current;
+    if (q) {
+      pendingQueryRef.current = null;
+      queueMicrotask(() => submitQuery(q));
+    }
+  }, [pendingQuery, submitQuery]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {

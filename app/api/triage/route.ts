@@ -62,7 +62,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (triageParsed.success) {
           return NextResponse.json(triageParsed.data);
         }
-      } catch (err) {
+      } catch {
         // Fall through to Anthropic or deterministic fallback
       }
     }
