@@ -62,7 +62,7 @@ export function TriageBanner({
 
         {/* Jurisdiction Pill */}
         <div className="inline-flex items-center gap-1 rounded-md bg-[var(--surface)] border border-[var(--border-subtle)] px-2 py-1 text-[11px] text-[var(--text-secondary)] font-mono">
-          <span className="opacity-70">📍</span>
+          <span aria-hidden="true">📍</span>
           <span>{triage?.jurisdiction || 'India / General'}</span>
         </div>
 

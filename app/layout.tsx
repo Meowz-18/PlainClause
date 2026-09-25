@@ -34,6 +34,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${inter.variable} ${sourceSerif.variable}`}
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
       <body>

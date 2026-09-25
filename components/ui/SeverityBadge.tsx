@@ -57,7 +57,7 @@ export function SeverityBadge({ severity, count, className = '' }: SeverityBadge
       </span>
       <span>{label}</span>
       {count !== undefined && (
-        <span className="opacity-75 font-normal">×{count}</span>
+        <span className="font-normal">×{count}</span>
       )}
     </span>
   );

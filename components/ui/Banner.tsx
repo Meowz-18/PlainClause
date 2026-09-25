@@ -55,7 +55,7 @@ export function Banner({
         </span>
         <div className="min-w-0">
           {title && <p className="font-semibold mb-0.5">{title}</p>}
-          <div className="text-xs leading-relaxed opacity-90">{children}</div>
+          <div className="text-xs leading-relaxed">{children}</div>
         </div>
       </div>
       {action && <div className="shrink-0 ml-2">{action}</div>}
